@@ -5,6 +5,8 @@
 #include "Sudoku.h"
 #include "Guess.h"
 #include "PrecisionTimeLapse.h"
+#include "RowCol.h"
+
 // solved with ones/peers
 char grid1[] = "..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3.."; // solves
 char grid3[] = "8.2.5.7.1..7.8246..1.9.....6....18325.......91843....6.....4.2..9561.3..3.8.9.6.7";
@@ -40,7 +42,7 @@ int main() {
 int main()
 {
 	Puzzles p;
-	Puzzles pf("../sudoku-puzzles/1000P.txt");
+	Puzzles pf("../sudoku-puzzles/5000P.txt");
 	cout << pf.getNumberOfPuzzles() << " puzzles loaded" << endl;
 	if (pf.getNumberOfPuzzles() == 0)
 		return 1;
@@ -84,14 +86,17 @@ int main()
     cout << "Solved " << solved << " out of " << pf.getNumberOfPuzzles() << endl;
 	//cout << total.elapsed() << endl;
 	cout << "Min time: " << minTime * 1000.0 << " ms, Max time: " << maxTime * 1000.0 << " ms, Average Time: " << (double)sumTime / (double)i * 1000 << " ms, Total: " << total.elapsedString(SEC) << " sec" << endl;
+
 }
 #endif // SHORTMAIN
 
 // time for 10000P.txt -	Min time: 0.2968 ms, Max time: 1.1741 ms, Average Time: 0.468564 ms, Total: 8.292689 sec
 // 10000 no stl             Min time: 0.023925 ms, Max time: 0.6758 ms, Average Time: 0.0331472 ms, Total: 0.591052 sec
+// made RowCol a class      Min time: 0.027894 ms, Max time: 0.892442 ms, Average Time: 0.0424302 ms, Total: 0.749934 sec
 // for 5000P.txt -			Min time: 0.3026 ms, Max time: 1.0865 ms, Average Time: 0.466454 ms, Total: 4.142156 sec
 // puzzles to char*			Min time: 0.3097 ms, Max time: 1.1732 ms, Average Time: 0.475113 ms, Total: 4.204304 sec
 // 5000 no stl              Min time: 0.022615 ms, Max time: 0.277514 ms, Average Time: 0.0309768 ms, Total: 0.280743 sec
+// 5000 make RowCol class   Min time: 0.027843 ms, Max time: 0.220808 ms, Average Time: 0.0384417 ms, Total: 0.337488 sec
 //10M failed no stl         Min time: 0.04433 ms, Max time: 4092.4 ms, Average Time: 0.47704 ms, Total: 187.767136 sec
 //Solved 10000000 out of 10000000
 //Min time: 0.012087 ms, Max time: 1777.67 ms, Average Time: 0.0422765 ms, Total: 673.391285 sec

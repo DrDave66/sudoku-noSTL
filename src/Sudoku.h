@@ -21,6 +21,7 @@ using namespace std;
 
 #include "SudokuTypes.h"
 #include "Guess.h"
+#include "RowCol.h"
 
 class Sudoku
 {
@@ -42,7 +43,7 @@ public:
     // solving funcitons
     //bool setValue(string square, string value);
     bool setValue(uint32_t r, uint32_t c, char value);
-    bool setValue(ROWCOL rc, char value);
+    bool setValue(RowCol rc, char value);
     bool setValue(Guess);
 	void removeChar(char* str, char ch);
 	uint32_t countOccurrences(char* str, char ch);
@@ -54,7 +55,7 @@ public:
     bool startGuessing();
     void printGuessList();
     bool removeAllowableValue(uint8_t r, uint8_t c, char value);
-    bool removeAllowableValue(ROWCOL rc, char value);
+    bool removeAllowableValue(RowCol rc, char value);
     bool removeAllowableValue(Guess g);
     bool guessesRemain(void);
     Guess getGuess();
@@ -89,7 +90,7 @@ public:
 
 	static const uint32_t dimNumUnitLists = 27;
 	static const uint32_t dimNumElementsInUnitList = 9;
-	ROWCOL c_unitList[dimNumUnitLists][dimNumElementsInUnitList];
+	RowCol c_unitList[dimNumUnitLists][dimNumElementsInUnitList];
 	
 	static const uint32_t dimNumSquaresPerUnit = 9;
 	static const uint32_t dimNumUnits = 3;

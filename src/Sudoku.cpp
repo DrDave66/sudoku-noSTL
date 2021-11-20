@@ -107,14 +107,14 @@ void Sudoku::createVectors(void) {
     
     
 	//ROWCOL rc;
-	ROWCOL* rcp;
+	RowCol rcp;
     uint32_t r,c;
     // squres
 	for (r = 0; r < strlen(c_rows); r++) {
 		for (c = 0; c < strlen(c_cols); c++) {
-			rcp = Guess::textToRC(squares[c + r * 9].c_str());
+            rcp = RowCol::fromText(squares[c + r * 9].c_str());
 			//c_squares[r][c] = *rcp;
-			strncpy(sudoku[r][c].name, Guess::RCToText(*rcp), 3);
+            strncpy(sudoku[r][c].name, rcp.toText(), 3);
 			// clear the puzzle while we are here
 			sudoku[r][c].value = '.';
 			strncpy(sudoku[r][c].allowableValues, c_digits, 10);
@@ -206,14 +206,17 @@ void Sudoku::createVectors(void) {
 //	}
     
 	// units
+    RowCol rc;
     int unitNumber = 0 ;
 	for (r = 0; r < numRows ; r++) {
+        rc.row = r;
 		for (c = 0; c < numCols ; c++) {
+            rc.col = c;
             unitNumber = 0;
 			for ( int nu = 0; nu < dimNumUnitLists ; nu++) {
                 for( int u = 0 ; u < dimNumElementsInUnitList ; u++) {
-                    if (c_unitList[nu][u].row == r && c_unitList[nu][u].col == c) {
-                        memcpy(&sudoku[r][c].units[unitNumber],&c_unitList[nu],sizeof(ROWCOL) * dimNumElementsInUnitList);
+                    if (c_unitList[nu][u] == rc) {
+                        memcpy(&sudoku[r][c].units[unitNumber],&c_unitList[nu],sizeof(RowCol) * dimNumElementsInUnitList);
                         unitNumber++;
                         continue;
                     }
@@ -221,22 +224,33 @@ void Sudoku::createVectors(void) {
 			}
 		}
 	}
-	// peers
+    for (r = 0; r < numRows ; r++) {
+        for (c = 0; c < numCols ; c++) {
+            printf("%s\n",RowCol::toText(r,c));
+            for(int uu = 0 ; uu < dimNumUnits; uu++) {
+                RowCol::printArray(sudoku[r][c].units[uu], 9); 
+
+            }
+            printf("\n");
+        }
+    }
     // peers
-    ROWCOL rrcc;
+    // peers
+    RowCol rrcc;
     for (int r = 0; r < numRows; r++) {
         rrcc.row = r;
         for (int c = 0; c < numCols; c++) {
             rrcc.col = c;
             for (int np = 0; np < dimNumPeers; np++) {
-                rcp = Guess::textToRC(peers[Guess::RCToText(rrcc)][np].c_str());
+                rcp = RowCol::fromText(peers[rrcc.toText()][np].c_str());
                 //c_peers[r][c][np] = rc;
-                sudoku[r][c].peers[np] = *rcp;
+                sudoku[r][c].peers[np] = rcp;
             }
+            
         }
     }
     
-    //    int peerNumber = 0;
+//    int peerNumber = 0;
 //	for (int r = 0; r < numRows; r++) {
 //		for (int c = 0; c < numCols; c++) {
 //            // look through each unit and see if it has this square in it.  if it does, copy every element that is NOT this square to peers
@@ -270,17 +284,11 @@ void Sudoku::createVectors(void) {
 //                    
 //                }
 //            }
-//            printf("Number of peers found was %d\n",peerNumber);
-//            printf("%d%d\n",r,c);
-//            for(int i = 0 ; i < peerNumber ; i++) {
-//                printf("%d%d ",sudoku[r][c].peers[peerNumber].row,sudoku[r][c].peers[peerNumber].col);
-//            }
-//            printf("\n\n");
 //		}
 //	}
 	int jj = 0;
     jj=1;
-    printSudoku();
+    //printSudoku();
 }
 
 void Sudoku::clearPuzzle(void) {
@@ -468,7 +476,7 @@ bool Sudoku::setValue(uint32_t r, uint32_t c, char value) {
 		strncpy(sudoku[r][c].allowableValues, "", 2);
 	}
 	sudoku[r][c].value = value;
-	ROWCOL rc;
+	RowCol rc;
 	for (uint32_t p = 0; p < dimNumPeers; p++) {
 		rc = sudoku[r][c].peers[p];
 		removeChar(sudoku[rc.row][rc.col].allowableValues, value);
@@ -505,7 +513,7 @@ bool Sudoku::solveOnes(void) {
         for (uint32_t ul = 0; ul < dimNumUnitLists; ul++) {
             strncpy(allValues, "", 2);
             for (uint32_t s = 0; s < dimNumElementsInUnitList; s++) {
-                ROWCOL rc = c_unitList[ul][s];
+                RowCol rc = c_unitList[ul][s];
                 strncat(allValues, sudoku[rc.row][rc.col].allowableValues, 10);
             }
             // count to see if any value only appears one time in a unit
@@ -513,7 +521,7 @@ bool Sudoku::solveOnes(void) {
                 size_t c = countOccurrences(allValues, c_digits[d]);
                 if (c == 1) {
                     for (uint32_t s = 0; s < dimNumElementsInUnitList; s++) {
-                        ROWCOL rc = c_unitList[ul][s];
+                        RowCol rc = c_unitList[ul][s];
                         size_t c1 = countOccurrences(sudoku[rc.row][rc.col].allowableValues, c_digits[d]);
                         if (c1 == 1) {
                             setValue(rc.row, rc.col, c_digits[d]);
@@ -536,7 +544,7 @@ bool Sudoku::solveOnes(void) {
 bool Sudoku::isPuzzleSolved(void) {
 	// a puzzle is solved if each unit in unitlist contains values of 1-9
 	char unitValues[10];
-	ROWCOL rc;
+	RowCol rc;
 	// first check - get puzzle text and look for '.'
     for(uint32_t r = 0 ; r < numRows ; r++) {
         for (uint32_t c = 0 ; c < numCols ; c++) {
@@ -583,7 +591,7 @@ bool Sudoku::removeAllowableValue(uint8_t r, uint8_t c, char value) {
     return retval;
 }
 
-bool Sudoku::removeAllowableValue(ROWCOL rc, char value) {
+bool Sudoku::removeAllowableValue(RowCol rc, char value) {
     return removeAllowableValue(rc.row, rc.col, value);
 }
 
@@ -604,7 +612,7 @@ Guess Sudoku::getGuess() { // returns square, value
 	size_t minCount = 9;
 	// iterate through squares and get lowest count > 1
 	size_t len;
-    ROWCOL rc[81];
+    RowCol rc[81];
     uint32_t numFound = 0;
     // search through all squares and find minimum number of availableValues
     for(uint32_t r = 0 ; r < numRows ; r++) {
@@ -627,7 +635,7 @@ Guess Sudoku::getGuess() { // returns square, value
         }
     }
     // pick one
-    ROWCOL rcg = rc[rand() % numFound];
+    RowCol rcg = rc[rand() % numFound];
     // now pick random number
     char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
     char g = pstr[rand() % strlen(pstr)];
@@ -661,7 +669,7 @@ void Sudoku::printGuessList() {
         printf("No Guesses in Stack\n");
     }else {
         for (uint32_t g = 0 ; g < currentGuess ; g++) {
-            printf("%s <- %c ",Guess::RCToText(guessStack[g].rc), guessStack[g].guess);
+            printf("%s <- %c ",RowCol::toText(guessStack[g].rc), guessStack[g].guess);
             if (g != currentGuess -1) {
                 printf(": ");
             }
@@ -677,7 +685,7 @@ bool Sudoku::solvePuzzle() {
 	else 
 		return startGuessing();
 }
-bool Sudoku::setValue(ROWCOL rc, char value) {
+bool Sudoku::setValue(RowCol rc, char value) {
     return setValue(rc.row, rc.col,value);
 }
 
@@ -721,14 +729,14 @@ bool Sudoku::startGuessing() {
 			 for (uint32_t nu = 0; nu < dimNumUnits; nu++) {
 				 printf("\t\t");
 				 for (uint32_t ns = 0; ns < dimNumSquaresPerUnit; ns++) {
-					 printf("%s ", Guess::RCToText(sudoku[r][c].units[nu][ns]));
+                     printf("%s ", RowCol::toText(sudoku[r][c].units[nu][ns]));
 				 }
 				 printf("\n");
 			 }
 			 printf("\tPeers\n");
 			 printf("\t\t");
 			 for (uint32_t p = 0; p < dimNumPeers; p++) {
-				 printf("%s ", Guess::RCToText(sudoku[r][c].peers[p]));
+                 printf("%s ", RowCol::toText(sudoku[r][c].peers[p]));
 			 }
 			 printf("\n\n");
 		 }
@@ -736,7 +744,7 @@ bool Sudoku::startGuessing() {
 	 printf("Size of sudoku is %d\n", (int32_t)sizeof(sudokuType));
  }
 
- char* testStr(ROWCOL rc) {
+ char* testStr(RowCol rc) {
 	 static char text[3];
 	 text[0] = (char)('A' + rc.row);
 	 text[1] = (char)('1' + rc.col);
