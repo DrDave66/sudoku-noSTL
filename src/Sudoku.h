@@ -4,7 +4,7 @@
 #pragma once
 
 #include <typeinfo>
-#include <string>
+//#include <string>
 #include <vector>
 #include <set>
 #include <map>
@@ -40,7 +40,7 @@ public:
 	void printAllowableValues(sudokuType state);
     
     // solving funcitons
-    bool setValue(string square, string value);
+    //bool setValue(string square, string value);
     bool setValue(uint32_t r, uint32_t c, char value);
     bool setValue(ROWCOL rc, char value);
     bool setValue(Guess);
@@ -67,7 +67,7 @@ public:
 //	string printableStringVector(vector<string> vec);
 //	string printableVectorVectorString(vector<vector<string> >);
 //	string printableStringSet(set<string> st);
-	
+//set<string> digitSet = { "1","2","3","4","5","6","7","8","9" };
 
 
 
@@ -76,28 +76,13 @@ public:
 	void printSudoku();
 	void printSudoku(sudokuType); // so you can look into the guess stack
 
-    static const uint32_t guessStackDepth = 81;
-	Guess guessStack[guessStackDepth];
-    uint32_t currentGuess = 0;
-    
-private:
+    sudokuType sudoku;
 
-public:
-	sudokuType sudoku;
-
-protected:
-
-	//bool setPuzzle(string p);
 	vector<string> crossProduct(string a, string b);
 	static const uint32_t numRows = 9;
 	static const uint32_t numCols = 9;
-	ROWCOL c_squares[numRows][numCols];
-	static const size_t valueStringLength = 81 * 11 + 1;
-	static const size_t puzzleStringLength = 82;
 
-	char c_puzzle[numRows][numCols];
-	static const uint32_t allowableDimLen = 10;
-	char c_allowableValues[numRows][numCols][allowableDimLen];
+
 	const char* c_digits = "123456789";
 	const char* c_rows = "ABCDEFGHI";
 	const char* c_cols = "123456789";
@@ -108,23 +93,39 @@ protected:
 	
 	static const uint32_t dimNumSquaresPerUnit = 9;
 	static const uint32_t dimNumUnits = 3;
-	//ROWCOL c_units[numRows][numCols][dimNumUnits][dimNumSquaresPerUnit];
-	// we do not use c_units - they are placed in sudokuType
+
 	static const uint32_t dimNumPeers = 20;
+    
+    uint32_t dimNumDigits = 9;
+    string digits = "123456789";
+    string rows = "ABCDEFGHI";
+    string cols = "123456789";
+    
+    
+    static const uint32_t guessStackDepth = 81;
+    Guess guessStack[guessStackDepth];
+    uint32_t currentGuess = 0;
+    Guess newGuess;
+    
+    //ROWCOL c_squares[numRows][numCols];
+    //ROWCOL c_units[numRows][numCols][dimNumUnits][dimNumSquaresPerUnit];
+    // we do not use c_units - they are placed in sudokuType
 	//ROWCOL c_peers[numRows][numCols][dimNumPeers];
 	// we do not use c_peers - they are placed in sudokuType
 
+    //	static const size_t valueStringLength = 81 * 11 + 1;
+    //	static const size_t puzzleStringLength = 82;
+    
+    //	char c_puzzle[numRows][numCols];
+    //	static const uint32_t allowableDimLen = 10;
+    //	char c_allowableValues[numRows][numCols][allowableDimLen];
+    //map<string, string> puzzle; // unit, value
 
-	//map<string, string> puzzle; // unit, value
-	uint32_t dimNumDigits = 9;
-	string digits = "123456789";
-	string rows = "ABCDEFGHI";
-	string cols = "123456789";
 
 	//map<string, string> allowableValues; // square, string of allowable values
 	//vector<Guess> guessList; // ordered list of guesses
-	Guess newGuess;
-	//set<string> digitSet = { "1","2","3","4","5","6","7","8","9" };
+
+
 };
 
 #endif //_SUDOKU_H

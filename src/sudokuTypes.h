@@ -2,8 +2,6 @@
 #ifndef _SUDOKUTYPES_H
 #define _SUDOKUTYPES_H
 
-#include <iostream>
-
 using namespace std;
 
 struct ROWCOL {

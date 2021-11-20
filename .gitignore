@@ -1,6 +1,7 @@
 # Mac files
 .DS_Store
-
+sudoku.xcodeproj
+Build
 # Prerequisites
 *.d
 

@@ -53,7 +53,8 @@ int main()
 	double sumTime = 0.0;
 	double time;
 	total.start();
-	for (uint32_t i = 0; i < pf.getNumberOfPuzzles(); i++) {
+    uint32_t i;
+	for (i = 0; i < pf.getNumberOfPuzzles(); i++) {
 
 		s.setPuzzle(pf.getPuzzle(i));
 		ptl.start();
@@ -82,7 +83,7 @@ int main()
 	total.stop();
     cout << "Solved " << solved << " out of " << pf.getNumberOfPuzzles() << endl;
 	//cout << total.elapsed() << endl;
-	cout << "Min time: " << minTime * 1000.0 << " ms, Max time: " << maxTime * 1000.0 << " ms, Average Time: " << (double)sumTime / (double)solved * 1000 << " ms, Total: " << total.elapsedString(SEC) << " sec" << endl;
+	cout << "Min time: " << minTime * 1000.0 << " ms, Max time: " << maxTime * 1000.0 << " ms, Average Time: " << (double)sumTime / (double)i * 1000 << " ms, Total: " << total.elapsedString(SEC) << " sec" << endl;
 }
 #endif // SHORTMAIN
 
