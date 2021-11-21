@@ -40,7 +40,8 @@ int main() {
 int main()
 {
 	Puzzles p;
-	Puzzles pf("../sudoku-puzzles/1MP.txt");
+	Puzzles pf("../sudoku-puzzles/10MP.txt");
+    //Puzzles pf("../../sudokus/SudokuPuzzles/10MPuzzles_Failed.txt");
 	cout << pf.getNumberOfPuzzles() << " puzzles loaded" << endl;
 	if (pf.getNumberOfPuzzles() == 0)
 		return 1;
@@ -73,7 +74,7 @@ int main()
 		minTime = min(minTime, time);
 		maxTime = max(maxTime, time);
 		sumTime += time;
-        if((i+1) % 1000 == 0)
+        if((i+1) % 10000 == 0)
             printf("%d - solved %d, last time %f msec, average time %f msec\n",i+1,solved,time*1000.0,sumTime/i * 1000);
 		//cout << time << " " << sumTime << "  ";
 		//cout << "Total time: " << ptl.elapsedString() << " solved " << solved << " out of " << i+1 << endl;
@@ -92,10 +93,12 @@ int main()
 // puzzles to char*			Min time: 0.3097 ms, Max time: 1.1732 ms, Average Time: 0.475113 ms, Total: 4.204304 sec
 // 5000 no stl              Min time: 0.022615 ms, Max time: 0.277514 ms, Average Time: 0.0309768 ms, Total: 0.280743 sec
 
+// 1MP mixed int sizes      Min time: 0.021179 ms, Max time: 2.2093 ms, Average Time: 0.0304263 ms, Total: 54.514873 sec
 
 //10M failed no stl         Min time: 0.04433 ms, Max time: 4092.4 ms, Average Time: 0.47704 ms, Total: 187.767136 sec
 // 10M no stl               Min time: 0.012087 ms, Max time: 1777.67 ms, Average Time: 0.0422765 ms, Total: 673.391285 sec
 // 10M rowcol a class       Min time: 0.01405 ms, Max time: 9021.51 ms, Average Time: 0.0742098 ms, Total: 1040.923312 sec
+// 10M mixed ints           Min time: 0.011876 ms, Max time: 2461.99 ms, Average Time: 0.0477803 ms, Total: 764.620911 sec
 
 // 	    1   2   3    4   5   6    7   8   9
 //   =========================================
