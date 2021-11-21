@@ -3,7 +3,7 @@
 
 
 
-Guess::Guess(sudokuType _state, RowCol _square, char _guess) {
+Guess::Guess(sudokuType _state, ROWCOL _square, char _guess) {
 	memcpy(state, _state, sizeof(sudokuType));
 	rc.row = _square.row;
 	rc.col = _square.col;
@@ -41,7 +41,7 @@ void Guess::setState(sudokuType st) {
 }
 char* Guess::toString() {
 	static char ss[60];
-    sprintf(ss,"Square: %s, Guess: %c",RowCol::toText(rc), guess);
+	sprintf(ss,"Square: %s, Guess: %c",RCToText(rc), guess);
 	return ss;
 }
 
@@ -51,3 +51,19 @@ void Guess::toString(char* ans) {
 }
 
 
+ROWCOL* Guess::textToRC(const char* text) {
+	static ROWCOL rc;
+
+	rc.row = (char)(text[0] - 'A');
+	rc.col = (char)atoi(&text[1]) - 1;
+
+	return &rc;
+}
+
+char* Guess::RCToText(ROWCOL rc) {
+	static char text[3];
+	text[0] = (char)('A' + rc.row);
+	text[1] = (char)('1' + rc.col);
+	text[2] = '\0';
+	return text;
+}

@@ -12,7 +12,7 @@ using namespace std;
 class Guess
 {
 public:
-	Guess(sudokuType _state, RowCol _square, char _guess);
+	Guess(sudokuType _state, ROWCOL _square, char _guess);
 	Guess();
 	Guess(const Guess&);
 	~Guess();
@@ -21,15 +21,15 @@ public:
 	char* toString();
 	void toString(char* ans);
 
-//	static ROWCOL* textToRC(const char* text);
-//	static char* RCToText(ROWCOL rc);
+	static ROWCOL* textToRC(const char* text);
+	static char* RCToText(ROWCOL rc);
 
 	sudokuType& getState();
 	void setState(sudokuType);
 	//////////////////////////////////////////////////////////////
 
 	sudokuType state;
-	RowCol rc;
+	ROWCOL rc;
 	char guess;
 
 };

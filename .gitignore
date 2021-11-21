@@ -2,6 +2,7 @@
 .DS_Store
 sudoku.xcodeproj
 Build
+srcx.zip
 # Prerequisites
 *.d
 
