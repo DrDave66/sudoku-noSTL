@@ -40,7 +40,7 @@ int main() {
 int main()
 {
 	Puzzles p;
-	Puzzles pf("../sudoku-puzzles/10MP.txt");
+	Puzzles pf("../sudoku-puzzles/1MP.txt");
     //Puzzles pf("../../sudokus/SudokuPuzzles/10MPuzzles_Failed.txt");
 	cout << pf.getNumberOfPuzzles() << " puzzles loaded" << endl;
 	if (pf.getNumberOfPuzzles() == 0)

@@ -39,8 +39,8 @@ WDELDEP = $(SRC:$(SRCDIR)/%$(EXT)=$(DEPDIR)\\%.d)
 
 # switch to release build if requested
 ifeq (YES,$(RELEASE))   
-CXXFLAGS = -std=c++11 -Wall -O1 -DNDEBUG
-CCFLAGS = -std=c++11 -Wall -O1 -DNDEBUG
+CXXFLAGS = -std=c11 -std=c++11 -Wall -O3 -DNDEBUG
+CCFLAGS = -std=c11 -std=c++11 -Wall -O3 -DNDEBUG
 else
 CXXFLAGS = -std=c++11 -Wall -g -DDEBUG 
 CCFLAGS = -std=c++11 -Wall -g -DDEBUG 

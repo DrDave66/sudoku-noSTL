@@ -6,6 +6,15 @@ srcx.zip
 # Prerequisites
 *.d
 
+# visual studio
+.vs
+Debug
+Release
+sudoku-nostl.*
+sudoku.stackdump
+
+#executable
+sudoku
 # Compiled Object files
 *.slo
 *.lo

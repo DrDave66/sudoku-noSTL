@@ -5,6 +5,7 @@ Puzzles::Puzzles() {
 	cout << "blank constructor\n";
 	numPuzzles = 0; 
 	strncpy(filename, "", 1);
+	c_puzzles = NULL;
 } 
 
 Puzzles::Puzzles(const char*  fname) {
@@ -14,7 +15,7 @@ Puzzles::Puzzles(const char*  fname) {
 	cout << fname << endl;
 	ptl.start();
 	strncpy(filename, fname,300);
-
+	c_puzzles = NULL;
 	char line[83];
 	FILE* f = fopen(filename,"rt");
 	if (f == NULL) {
@@ -53,9 +54,11 @@ Puzzles::Puzzles(const char*  fname) {
 Puzzles::~Puzzles() {
 	uint32_t i;
 	for (i = 0; i < numPuzzles; i++) {
-		delete[] c_puzzles[i];
+		if(c_puzzles[i] != NULL)
+			delete[] c_puzzles[i];
 	}
-	delete[] c_puzzles;
+	if(c_puzzles != NULL)
+		delete[] c_puzzles;
 }
 uint32_t Puzzles::getNumberOfPuzzles(void) {
 	return numPuzzles;
