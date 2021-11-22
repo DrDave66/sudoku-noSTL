@@ -40,7 +40,6 @@ public:
 	void printAllowableValues(sudokuType state);
     
     // solving funcitons
-    bool setValue(string square, string value);
     bool setValue(uint32_t r, uint32_t c, char value);
     bool setValue(ROWCOL rc, char value);
     bool setValue(Guess);
@@ -58,6 +57,7 @@ public:
     bool removeAllowableValue(Guess g);
     bool guessesRemain(void);
     Guess getGuess();
+	Guess getGuessNoMin();
     bool popGuess();
     bool pushGuess(const Guess);
     

@@ -73,8 +73,8 @@ void Sudoku::createVectors(void) {
 	//ROWCOL rc;
 	ROWCOL* rcp;
 	// squres
-	for (int r = 0; r < strlen(c_rows); r++) {
-		for (int c = 0; c < strlen(c_cols); c++) {
+	for (uint32_t r = 0; r < strlen(c_rows); r++) {
+		for (uint32_t c = 0; c < strlen(c_cols); c++) {
 			rcp = Guess::textToRC(squares[c + r * 9].c_str());
 			c_squares[r][c] = *rcp;
 			strncpy(sudoku[r][c].name, Guess::RCToText(*rcp), 3);
@@ -255,9 +255,6 @@ void Sudoku::printAllowableValues(char* title) {
 /**********************************************************
 **********   Solving Functions ***************************
 ***********************************************************/
-bool Sudoku::setValue(string square, string value) {
-	return true;
-}
 
 uint32_t Sudoku::countOccurrences(char* str, char ch) {
 	uint32_t count = 0;
@@ -453,7 +450,7 @@ bool Sudoku::guessesRemain(void) {
 	return false;
 }
 
-Guess Sudoku::getGuess() { // returns square, value
+Guess Sudoku::getGuess() { // returns Guess
 	size_t minCount = 9;
 	// iterate through squares and get lowest count > 1
 	size_t len;
@@ -488,6 +485,30 @@ Guess Sudoku::getGuess() { // returns square, value
     return newGuess;
 }
 
+Guess Sudoku::getGuessNoMin() { // returns Guess, but does not look at the number of avaiable guesses in each square
+	size_t minCount = 9;
+	size_t len;
+	ROWCOL rc[81];
+	uint32_t numFound = 0;
+	// make a list of all squares with the mininum values
+	for (uint32_t r = 0; r < numRows; r++) {
+		for (uint32_t c = 0; c < numCols; c++) {
+			len = strlen(sudoku[r][c].allowableValues);
+			if (len > 0) {
+				rc[numFound].row = r;
+				rc[numFound].col = c;
+				numFound++;
+			}
+		}
+	}
+	// pick one
+	ROWCOL rcg = rc[rand() % numFound];
+	// now pick random number
+	char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
+	char g = pstr[rand() % strlen(pstr)];
+	newGuess = Guess(sudoku, rcg, g);
+	return newGuess;
+}
 bool Sudoku::popGuess() {
     if(currentGuess == 0)
         return false;
@@ -556,26 +577,6 @@ bool Sudoku::startGuessing() {
         }
     }
     return isPuzzleSolved();
-	//guessList.clear();
-	//while(!isPuzzleSolved()) {
-	//	while (guessesRemain()) {
-	//		Guess g = getGuess();
-	//		pushGuess(&g);
-	//		setValue(g.square, g.guess);
-	//		while (solveUniqueInUnits() || solveOnes()) ;
-	//		if (isPuzzleSolved() == false && guessesRemain() == false) {
-	//			popGuess();
-	//		}
-	//	}
-	//	if (isPuzzleSolved() == false) {
-	//		if (guessList.size() == 0) {
-	//		}
-	//		if(popGuess() == false) {
-	//			return false;
-	//		}
-	//	}
-	//		
-	//}
 }
 
  
