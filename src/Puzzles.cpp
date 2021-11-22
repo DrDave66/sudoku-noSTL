@@ -94,7 +94,6 @@ void Puzzles::generateRandomPuzzle(Sudoku& s, uint8_t minValues) {
 	while (valuesSet < minValues || sd < 8) {
 		Guess g = s.getGuessNoMin();
 		s.setValue(g);
-		char t[2];
 		int guessNum = (char)atoi(&g.guess);
 		digitSet[guessNum - 1] = 1;
 		valuesSet++;
