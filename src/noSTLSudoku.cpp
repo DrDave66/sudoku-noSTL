@@ -20,34 +20,40 @@ char TM604[] =   "2......9.3.49.1..2.95.6...3.6.459..8.8...6.1...28..4..7.13...8
 char TM118[] =   "39...1487.173.4.598649.7...1..8.576...8436..1.4.71.8354.6.73.989..64837.7..5.9.4.";
 char TM145[] =   "57.2.3..19.3..4.85.41...3..7.....19.....98...219..7.3..548.6.7...297..1..9..2..53";
 
-#define NOSHORTMAIN
+#define nSHORTMAIN
 
 #ifdef SHORTMAIN
 int main() {
-	Puzzles p;
-	Sudoku s;
-	PrecisionTimeLapse ptl;
-	double minTime = 1000.0;
-	double maxTime = 0;
-	double time;
-	double sumTime = 0;
-	int i;
-	for (i = 0; i < 100; i++){
-		printf("Puzzle %d:", i);
-		p.generateRandomPuzzle(s,20);
-		//s.printPuzzle();
-		ptl.start();
-		bool solved = s.solvePuzzle();
-		ptl.stop();
-		//s.printPuzzle();
-		time = ptl.elapsed() * 1000;
-		minTime = min(minTime, time);
-		maxTime = max(maxTime, time);
-		sumTime += time;
-		printf(" solved %d, time: %f msec\n", solved, ptl.elapsed() * 1000);
-	}
-	printf("Min time: %0.4f msec: Max time: %0.4f, Average Time: %0.4f\n", minTime, maxTime, sumTime / (double)(i));
+    Sudoku s(hard1);
+    s.solvePuzzle();
+    printf("done\n");
 }
+
+//int main() {
+//	Puzzles p;
+//	Sudoku s;
+//	PrecisionTimeLapse ptl;
+//	double minTime = 1000.0;
+//	double maxTime = 0;
+//	double time;
+//	double sumTime = 0;
+//	int i;
+//	for (i = 0; i < 100; i++){
+//		printf("Puzzle %d:", i);
+//		p.generateRandomPuzzle(s,20);
+//		//s.printPuzzle();
+//		ptl.start();
+//		bool solved = s.solvePuzzle();
+//		ptl.stop();
+//		//s.printPuzzle();
+//		time = ptl.elapsed() * 1000;
+//		minTime = min(minTime, time);
+//		maxTime = max(maxTime, time);
+//		sumTime += time;
+//		printf(" solved %d, time: %f msec\n", solved, ptl.elapsed() * 1000);
+//	}
+//	printf("Min time: %0.4f msec: Max time: %0.4f, Average Time: %0.4f\n", minTime, maxTime, sumTime / (double)(i));
+//}
 //604
 //118
 //146

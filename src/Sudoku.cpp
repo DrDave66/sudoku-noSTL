@@ -449,6 +449,41 @@ bool Sudoku::guessesRemain(void) {
 	}
 	return false;
 }
+Guess Sudoku::getGuessNotRandom() {
+    size_t minCount = 9;
+    // iterate through squares and get lowest count > 1
+    size_t len;
+    ROWCOL rc[81];
+    uint32_t numFound = 0;
+    // search through all squares and find minimum number of availableValues
+    for(uint32_t r = 0 ; r < numRows ; r++) {
+        for (uint32_t c = 0 ; c < numCols ; c++) {
+            len = strlen(sudoku[r][c].allowableValues);
+            if(len != 0) {
+                minCount = min(minCount, len);
+            }
+        }
+    }
+    // make a list of all squares with the mininum values
+    for(uint32_t r = 0 ; r < numRows ; r++) {
+        for (uint32_t c = 0 ; c < numCols ; c++) {
+            len = strlen(sudoku[r][c].allowableValues);
+            if(len == minCount) {
+                rc[numFound].row = r;
+                rc[numFound].col = c;
+                numFound++;
+            }
+        }
+    }
+    // pick first RC and first value
+    ROWCOL rcg = rc[0];
+    // now pick random number
+    char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
+    char g = pstr[0];
+    newGuess = Guess(sudoku,rcg,g);
+    return newGuess;
+    
+}
 
 Guess Sudoku::getGuess() { // returns Guess
 	size_t minCount = 9;
@@ -486,7 +521,6 @@ Guess Sudoku::getGuess() { // returns Guess
 }
 
 Guess Sudoku::getGuessNoMin() { // returns Guess, but does not look at the number of avaiable guesses in each square
-	size_t minCount = 9;
 	size_t len;
 	ROWCOL rc[81];
 	uint32_t numFound = 0;
@@ -559,23 +593,33 @@ bool Sudoku::setValue(Guess g) {
     return setValue(g.rc.row, g.rc.col, g.guess);
     
 }
+static int ggg;
+
 bool Sudoku::startGuessing() {
     currentGuess = 0;
+    ggg = 0;
     while(!isPuzzleSolved()) {
         while(guessesRemain()) {
+            //ggg++;
+            //Guess g = getGuessNotRandom();
             Guess g = getGuess();
+            //Guess g = getGuessNoMin();
             pushGuess(g);
             setValue(g);
             solveOnes();
             if ( !isPuzzleSolved() && !guessesRemain()) {
                 popGuess();
             }
+            //if(ggg % 50000 == 0)
+            //    printf("%d - %d\n",ggg,currentGuess);
         }
+
         if( !isPuzzleSolved()) {
             if (popGuess() == false)
                 return false;
         }
     }
+    //printf("Guesses %d\n",ggg);
     return isPuzzleSolved();
 }
 

@@ -58,6 +58,7 @@ public:
     bool guessesRemain(void);
     Guess getGuess();
 	Guess getGuessNoMin();
+    Guess getGuessNotRandom();
     bool popGuess();
     bool pushGuess(const Guess);
     
