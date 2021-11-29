@@ -1,0 +1,11 @@
+{
+    "makefile.extensionOutputFolder": "./.vscode",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/dave/Code/GitHub/sudoku-noSTL",
+            "binaryPath": "/Users/dave/Code/GitHub/sudoku-noSTL/sudoku",
+            "binaryArgs": []
+        }
+    ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.makefile-tools"
+}

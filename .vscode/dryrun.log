@@ -1,0 +1,20 @@
+make all --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/dave/Code/GitHub/sudoku-noSTL'
+ 
+make: Leaving directory `/Users/dave/Code/GitHub/sudoku-noSTL'
+ 
+make: Entering directory `/Users/dave/Code/GitHub/sudoku-noSTL'
+mkdir -p obj	
+clang++ -std=c++11 -Wall -g -DDEBUG  -o obj/Guess.o -c src/Guess.cpp
+mkdir -p obj	
+clang++ -std=c++11 -Wall -g -DDEBUG  -o obj/PrecisionTimeLapse.o -c src/PrecisionTimeLapse.cpp
+mkdir -p obj	
+clang++ -std=c++11 -Wall -g -DDEBUG  -o obj/Puzzles.o -c src/Puzzles.cpp
+mkdir -p obj	
+clang++ -std=c++11 -Wall -g -DDEBUG  -o obj/Sudoku.o -c src/Sudoku.cpp
+ 
+mkdir -p obj	
+clang++ -std=c++11 -Wall -g -DDEBUG  -o obj/noSTLSudoku.o -c src/noSTLSudoku.cpp
+clang++ -std=c++11 -Wall -g -DDEBUG  -o sudoku obj/Guess.o obj/PrecisionTimeLapse.o obj/Puzzles.o obj/Sudoku.o obj/noSTLSudoku.o -lstdc++
+make: Leaving directory `/Users/dave/Code/GitHub/sudoku-noSTL'
+ 
