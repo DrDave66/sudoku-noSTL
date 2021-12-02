@@ -1,9 +1,0 @@
-before changes debug
-Min time: 0.023416 ms, Max time: 10.0889 ms, Average Time: 0.0342219 ms, Total: 6.097431 sec
-
-after just adding allowable value
-Min time: 0.023254 ms, Max time: 4.0058 ms, Average Time: 0.0313624 ms, Total: 5.806400 sec
-
-new guess 1
-Min time: 0.02308 ms, Max time: 5.96483 ms, Average Time: 0.0310892 ms, Total: 5.762632 sec
-Min time: 0.023022 ms, Max time: 5.47504 ms, Average Time: 0.0336903 ms, Total: 6.211190 sec

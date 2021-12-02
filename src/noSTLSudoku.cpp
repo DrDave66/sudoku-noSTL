@@ -24,7 +24,7 @@ char TM145[] =   "57.2.3..19.3..4.85.41...3..7.....19.....98...219..7.3..548.6.7
 
 #ifdef SHORTMAIN
 int main() {
-	Sudoku s(hard505);
+    Sudoku s;
 }
 
 //int main() {
@@ -61,7 +61,7 @@ int main() {
 int main()
 {
 	Puzzles p;
-	Puzzles pf("../sudoku-puzzles/1MP.txt");
+	Puzzles pf("../sudoku-puzzles/100000P.txt");
     //Puzzles pf("../../sudokus/SudokuPuzzles/10MPuzzles_Failed.txt");
 	cout << pf.getNumberOfPuzzles() << " puzzles loaded" << endl;
 	if (pf.getNumberOfPuzzles() == 0)
@@ -108,19 +108,8 @@ int main()
 }
 #endif // SHORTMAIN
 
-// time for 10000P.txt -	Min time: 0.2968 ms, Max time: 1.1741 ms, Average Time: 0.468564 ms, Total: 8.292689 sec
-// 10000 no stl             Min time: 0.023925 ms, Max time: 0.6758 ms, Average Time: 0.0331472 ms, Total: 0.591052 sec
-// for 5000P.txt -			Min time: 0.3026 ms, Max time: 1.0865 ms, Average Time: 0.466454 ms, Total: 4.142156 sec
-// puzzles to char*			Min time: 0.3097 ms, Max time: 1.1732 ms, Average Time: 0.475113 ms, Total: 4.204304 sec
-// 5000 no stl              Min time: 0.022615 ms, Max time: 0.277514 ms, Average Time: 0.0309768 ms, Total: 0.280743 sec
-
-// 1MP mixed int sizes      Min time: 0.021179 ms, Max time: 2.2093 ms, Average Time: 0.0304263 ms, Total: 54.514873 sec
-
-//10M failed no stl         Min time: 0.04433 ms, Max time: 4092.4 ms, Average Time: 0.47704 ms, Total: 187.767136 sec
-// 10M no stl               Min time: 0.012087 ms, Max time: 1777.67 ms, Average Time: 0.0422765 ms, Total: 673.391285 sec
-// 10M rowcol a class       Min time: 0.01405 ms, Max time: 9021.51 ms, Average Time: 0.0742098 ms, Total: 1040.923312 sec
-// 10M mixed ints           Min time: 0.011876 ms, Max time: 2461.99 ms, Average Time: 0.0477803 ms, Total: 764.620911 sec
-
+//100k starting point               Min time: 0.023276 ms, Max time: 1.69528 ms, Average Time: 0.03387 ms, Total: 6.018346 sec
+//100k improved STL                 Min time: 0.01634 ms, Max time: 13.2826 ms, Average Time: 0.0234467 ms, Total: 2.572433 sec
 // 	    1   2   3    4   5   6    7   8   9
 //   =========================================
 // A || . | 4 | 3 || . | 8 | . || 2 | 5 | . ||
