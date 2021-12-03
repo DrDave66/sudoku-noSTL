@@ -16,6 +16,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <cstdlib>
+#include <cstring>
 
 using namespace std;
 
@@ -41,11 +42,12 @@ public:
 	void printAllowableValues(SUDOKUTYPE state);
     
     // solving funcitons
-    bool setValue(uint32_t r, uint32_t c, char value);
+    bool setValue(uint8_t r, uint8_t c, char value);
     bool setValue(RowCol rc, char value);
     bool setValue(Guess);
 	void removeChar(char* str, char ch);
-	uint32_t countOccurrences(char* str, char ch);
+    void removeFirstChar(char* str, char ch);
+	uint8_t countOccurrences(char* str, char ch);
 	bool solveOnes(void);
     bool isPuzzleSolved(void);
     bool solvePuzzle();
@@ -118,7 +120,9 @@ protected:
     //map<string, string> puzzle; // unit, value
 	uint32_t dimNumDigits = 9;
 	Guess newGuess;
-
+    RowCol rcGuess[81];
+	RowCol workrc;
+    char puzzleText[81];
 };
 
 #endif //_SUDOKU_H

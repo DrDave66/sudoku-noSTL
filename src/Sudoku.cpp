@@ -43,14 +43,6 @@ void Sudoku::createVectors(void) {
 			stlunitlist.push_back(temp);
 		}
 	}
-    printf("STLUINTLIST\n");
-    for (vector<string> vs : stlunitlist) {
-        for(string s : vs) {
-            cout << s << " ";
-        }
-        cout << endl;
-    }
-    cout << endl << endl << endl;
     
 	// make unit dictionary - all units that contain the square
 	for (string sq : stlsquares) {
@@ -81,41 +73,25 @@ void Sudoku::createVectors(void) {
 
 	// now use the STL vectors to populate the non-stl stuff
 	//ROWCOL rc;
-	RowCol rc;
+	//RowCol rc;
 	// squres
 	for (uint8_t r = 0; r < strlen(rows); r++) {
 		for (uint8_t c = 0; c < strlen(cols); c++) {
-            rc.row = r; rc.col = c;
-			strncpy(sudoku[r][c].name, rc.toString(), 3);
+            workrc.row = r; workrc.col = c;
+			strncpy(sudoku[r][c].name, workrc.toString(), 3);
 			// clear the puzzle while we are here
 			sudoku[r][c].value = '.';
 			strncpy(sudoku[r][c].allowableValues, digits, 10);
 		}
 	}
-    printf("SQUARES\n");
-    for (uint8_t r = 0; r < strlen(rows); r++) {
-        for (uint8_t c = 0; c < strlen(cols); c++) {
-            printf("%s ", sudoku[r][c].name);
-        }
-        printf("\n");
-    }
-    
 
 	// unitlists
 	for (uint8_t ul = 0; ul < dimNumUnitLists; ul++) {
 		for (uint8_t i = 0; i < dimNumSquaresPerUnit;i++) {
-			rc.fromString(stlunitlist[ul][i]);
-            unitList[ul][i] = rc;
+			workrc.fromString(stlunitlist[ul][i]);
+            unitList[ul][i] = workrc;
 		}
 	}
- 
-    printf("\n\nUNITLIST\n");
-    for (uint8_t ul = 0; ul < dimNumUnitLists; ul++) {
-        for (uint8_t i = 0; i < dimNumSquaresPerUnit;i++) {
-            printf("%s ",unitList[ul][i].toString());
-        }
-        printf("\n");
-    }
     
 	// units
 	RowCol rrcc;
@@ -125,14 +101,40 @@ void Sudoku::createVectors(void) {
 				for (int s = 0; s < dimNumSquaresPerUnit; s++) {
 					rrcc.row = r;
 					rrcc.col = c;
-					rc.fromString(stlunits[rrcc.toString()][nu][s]);
+					workrc.fromString(stlunits[rrcc.toString()][nu][s]);
 					//c_units[r][c][nu][s] = rc;
-					units[r][c][nu][s] = rc;
+					units[r][c][nu][s] = workrc;
 				}
 			}
 		}
 	}
     
+    // peers
+	for (int r = 0; r < numRows; r++) {
+		rrcc.row = r;
+		for (int c = 0; c < numCols; c++) {
+			rrcc.col = c;
+			for (int np = 0; np < dimNumPeers; np++) {
+				workrc.fromString(stlpeers[rrcc.toString()][np]);
+				peers[r][c][np] = workrc;
+			}
+		}
+	}
+#if 0
+    printf("SQUARES\n");
+    for (uint8_t r = 0; r < strlen(rows); r++) {
+        for (uint8_t c = 0; c < strlen(cols); c++) {
+            printf("%s ", sudoku[r][c].name);
+        }
+        printf("\n");
+    }
+    printf("\n\nUNITLIST\n");
+    for (uint8_t ul = 0; ul < dimNumUnitLists; ul++) {
+        for (uint8_t i = 0; i < dimNumSquaresPerUnit;i++) {
+            printf("%s ",unitList[ul][i].toString());
+        }
+        printf("\n");
+    }
     printf("\n\nUNITS\n");
     for (int r = 0; r < numRows ; r++) {
         for (int c = 0; c < numCols ; c++) {
@@ -145,39 +147,21 @@ void Sudoku::createVectors(void) {
             }
             printf("\n");
         }
-
+        
     }
-  
-    
-    // peers
-	for (int r = 0; r < numRows; r++) {
-		rrcc.row = r;
-		for (int c = 0; c < numCols; c++) {
-			rrcc.col = c;
-			for (int np = 0; np < dimNumPeers; np++) {
-				rc.fromString(stlpeers[rrcc.toString()][np]);
-				//c_peers[r][c][np] = rc;
-				peers[r][c][np] = rc;
-			}
-		}
-	}
-    
-    
     printf("\n\nPEERS\n");
     for (int r = 0; r < numRows ; r++) {
         for (int c = 0; c < numCols ; c++) {
             printf("%c%c:\n",r+'A',c+'1');
             for (int np = 0; np < dimNumPeers; np++) {
                 rc.fromString(stlpeers[rrcc.toString()][np]);
-                //c_peers[r][c][np] = rc;
                 printf("%s ",peers[r][c][np].toString());
             }
             printf("\n");
         }
         
     }
-
-    
+#endif
     //	int jj = 0;
 }
 
@@ -317,9 +301,9 @@ void Sudoku::printAllowableValues(char* title) {
 **********   Solving Functions ***************************
 ***********************************************************/
 
-uint32_t Sudoku::countOccurrences(char* str, char ch) {
-	uint32_t count = 0;
-	uint32_t i = 0;
+uint8_t Sudoku::countOccurrences(char* str, char ch) {
+	uint8_t count = 0;
+	uint8_t i = 0;
 	while (str[i] != '\0')
 	{
 		if (str[i] == ch)
@@ -349,138 +333,120 @@ void Sudoku::removeChar(char* str, char ch) {
 	}
 }
 
-bool Sudoku::setValue(uint32_t r, uint32_t c, char value) {
-//#ifdef TIMING
-//	PrecisionTimeLapse ptl;
-//	ptl.start();
-//#endif 	
-//	if (strchr(sudoku[r][c].allowableValues,value) == NULL)
-//		return false;
-//	if (value == '0' || value == '.') {
-//		strncpy(sudoku[r][c].allowableValues, c_digits, 10);
-//	}
-//	else {
-//		strncpy(sudoku[r][c].allowableValues, "", 2);
-//	}
-//	sudoku[r][c].value = value;
-//	ROWCOL rc;
-//	for (uint32_t p = 0; p < dimNumPeers; p++) {
-//		rc = sudoku[r][c].peers[p];
-//		removeChar(sudoku[rc.row][rc.col].allowableValues, value);
-//	}
-//	int j = 12;
-//	j = 13;
-//#ifdef TIMING
-//	ptl.stop();
-//	cout << "setValue," << ptl.elapsedString() << endl;
-//#endif
+void Sudoku::removeFirstChar(char* str, char ch) {
+    uint32_t i, j;
+    size_t len = strlen(str);
+    for (i = 0; i < len; i++)
+    {
+        if (str[i] == ch)
+        {
+            for (j = i; j < len; j++)
+            {
+                str[j] = str[j + 1];
+            }
+            return;
+        }
+    }
+}
+
+bool Sudoku::setValue(uint8_t r, uint8_t c, char value) {
+#ifdef TIMING
+	PrecisionTimeLapse ptl;
+	ptl.start();
+#endif 	
+    uint8_t rr,cc;
+    if (countOccurrences(sudoku[r][c].allowableValues, value) == 0)
+        return false;
+	if (value == '0' || value == '.') {
+        memcpy(sudoku[r][c].allowableValues, digits, 9);
+	}
+	else {
+		sudoku[r][c].allowableValues[0] = '\0';
+    }
+	sudoku[r][c].value = value;
+	for (uint8_t p = 0; p < dimNumPeers; p++) {
+		rr = peers[r][c][p].row;
+        cc = peers[r][c][p].col;
+		removeChar(sudoku[rr][cc].allowableValues, value);
+	}
+#ifdef TIMING
+	ptl.stop();
+	cout << "setValue," << ptl.elapsedString() << endl;
+#endif
 	return true;
 }
 
 bool Sudoku::solveOnes(void) {
-//#ifdef TIMING	
-//	PrecisionTimeLapse ptl;
-//	ptl.start();
-//#endif	
-////	char tempstr[200];
+#ifdef TIMING	
+	PrecisionTimeLapse ptl;
+	ptl.start();
+#endif	
+    char allValues[9 * 82];
 	bool solvedSome = true; // set to true to ensure one iteration
-//	while (solvedSome == true) {
-//        solvedSome = false; // set to false to exit after one interation if nothing is set
-//        // find squares with only one available value
-//        for (uint32_t r = 0; r < numRows; r++) {
-//            for (uint32_t c = 0; c < numCols; c++) {
-//                if (strlen(sudoku[r][c].allowableValues) == 1) {
-//                    setValue(r, c, (char)sudoku[r][c].allowableValues[0]);
-//                    solvedSome = true;
-//                }
-//            }
-//        }
-//        // look through all units and see if any value appears only one time
-//        char allValues[9 * 82];
-//        for (uint32_t ul = 0; ul < dimNumUnitLists; ul++) {
-//            strncpy(allValues, "", 2);
-//            for (uint32_t s = 0; s < dimNumElementsInUnitList; s++) {
-//                ROWCOL rc = c_unitList[ul][s];
-//                strncat(allValues, sudoku[rc.row][rc.col].allowableValues, 10);
-//            }
-//            // count to see if any value only appears one time in a unit
-//            for (uint32_t d = 0; d < dimNumDigits;d++) {
-//                size_t c = countOccurrences(allValues, c_digits[d]);
-//                if (c == 1) {
-//                    for (uint32_t s = 0; s < dimNumElementsInUnitList; s++) {
-//                        ROWCOL rc = c_unitList[ul][s];
-//                        size_t c1 = countOccurrences(sudoku[rc.row][rc.col].allowableValues, c_digits[d]);
-//                        if (c1 == 1) {
-//                            setValue(rc.row, rc.col, c_digits[d]);
-//                            solvedSome = true;
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        
-//	}
-//
-//#ifdef TIMING	
-//	ptl.stop();
-//	cout << "solveOnes," << ptl.elapsedString() << endl;
-//#endif
+	while (solvedSome == true) {
+        solvedSome = false; // set to false to exit after one interation if nothing is set
+        // find squares with only one available value
+        for (uint8_t r = 0; r < numRows; r++) {
+            for (uint8_t c = 0; c < numCols; c++) {
+                if (strlen(sudoku[r][c].allowableValues) == 1) {
+                    setValue(r, c, (char)sudoku[r][c].allowableValues[0]);
+                    solvedSome = true;
+                }
+            }
+        }
+        // look through all units and see if any value appears only one time
+
+        for (uint8_t ul = 0; ul < dimNumUnitLists; ul++) {
+            allValues[0] = '\0';
+            for (uint8_t s = 0; s < dimNumElementsInUnitList; s++) {
+                workrc = unitList[ul][s];
+                strcat(allValues, sudoku[workrc.row][workrc.col].allowableValues);
+            }
+            // count to see if any value only appears one time in a unit
+            for (uint32_t d = 0; d < dimNumDigits;d++) {
+                if (countOccurrences(allValues, digits[d]) == 1) {
+                    for (uint32_t s = 0; s < dimNumElementsInUnitList; s++) {
+                        workrc = unitList[ul][s];
+                        if (countOccurrences(sudoku[workrc.row][workrc.col].allowableValues, digits[d]) == 1) {
+                            setValue(workrc, digits[d]);
+                            solvedSome = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+	}
+
+#ifdef TIMING	
+	ptl.stop();
+	cout << "solveOnes," << ptl.elapsedString() << endl;
+#endif
 	return solvedSome;
 }
 
 bool Sudoku::isPuzzleSolved(void) {
 //	// a puzzle is solved if each unit in unitlist contains values of 1-9
-//	char unitValues[10];
-//	ROWCOL rc;
-//	// first check - get puzzle text and look for '.'
-//	if (countOccurrences(getPuzzleText(), '.') != 0) {
-//		return false;
-//	}
-//	for (uint32_t ul = 0; ul < dimNumUnitLists;ul++) {
-//		for (uint32_t u = 0; u < dimNumElementsInUnitList; u++) {
-//			rc = c_unitList[ul][u];
-//			unitValues[u] = sudoku[rc.row][rc.col].value;
-//		}
-//		unitValues[9] = '\0';
-//		// string is built.  make sure each digit appears exactly once
-//		for (uint32_t d = 0; d < dimNumDigits; d++) {
-//			if (countOccurrences(unitValues, c_digits[d]) != 1) {
-//				return false;
-//			}
-//		}
-//	}
-	return true;
-}
+	char unitValues[10];
 
-char* Sudoku::getPuzzleText(void) {
-	static char retval[valueStringLength];
-	memset((void*)retval, 0, 83);
-	for (uint8_t r = 0; r < numRows; r++) {
-		for (uint8_t c = 0; c < numCols; c++) {
-			retval[c + r * numCols] = sudoku[r][c].value;
+	// first check - get puzzle text and look for '.'
+	for (uint32_t ul = 0; ul < dimNumUnitLists;ul++) {
+		for (uint32_t u = 0; u < dimNumElementsInUnitList; u++) {
+			workrc = unitList[ul][u];
+			unitValues[u] = sudoku[workrc.row][workrc.col].value;
+		}
+		unitValues[9] = '\0';
+		// string is built.  make sure each digit appears exactly once
+		for (uint32_t d = 0; d < dimNumDigits; d++) {
+			if (countOccurrences(unitValues, digits[d]) != 1) {
+				return false;
+			}
 		}
 	}
-	return retval;
+	return true;
+
 }
-//
-//char* Sudoku::getAllowableValuesText(void) {
-//	static char retval[valueStringLength];
-//	char delim[] = "|";
-//	char blank[] = "0|";
-//	strncpy(retval, "", 1);
-//	for (uint32_t r = 0; r < numRows; r++) {
-//		for (uint32_t c = 0; c < numCols; c++) {
-//			if (strlen(sudoku[r][c].allowableValues) == 0) {
-//				strncat(retval, blank, 3);
-//			}
-//			else {
-//				strncat(retval, sudoku[r][c].allowableValues, 11);
-//				strncat(retval, delim, 2);
-//			}
-//		}
-//	}
-//	return retval;
-//}
 
 bool Sudoku::removeAllowableValue(uint8_t r, uint8_t c, char value) {
     bool retval;
@@ -545,63 +511,65 @@ Guess Sudoku::getGuessNotRandom() {
     return newGuess;
 }
 
-Guess Sudoku::getGuess() { // returns Guess
-//	size_t minCount = 9;
-//	// iterate through squares and get lowest count > 1
-//	size_t len;
-//    ROWCOL rc[81];
-//    uint32_t numFound = 0;
-//    // search through all squares and find minimum number of availableValues
-//    for(uint32_t r = 0 ; r < numRows ; r++) {
-//        for (uint32_t c = 0 ; c < numCols ; c++) {
-//            len = strlen(sudoku[r][c].allowableValues);
-//            if(len != 0) {
-//                minCount = min(minCount, len);
-//            }
-//        }
-//    }
-//    // make a list of all squares with the mininum values
-//    for(uint32_t r = 0 ; r < numRows ; r++) {
-//        for (uint32_t c = 0 ; c < numCols ; c++) {
-//            len = strlen(sudoku[r][c].allowableValues);
-//            if(len == minCount) {
-//                rc[numFound].row = r;
-//                rc[numFound].col = c;
-//                numFound++;
-//            }
-//        }
-//    }
-//    // pick one
-//    ROWCOL rcg = rc[rand() % numFound];
-//    // now pick random number
-//    char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
-//    char g = pstr[rand() % strlen(pstr)];
-//    newGuess = Guess(sudoku,rcg,g);
+Guess Sudoku::getGuessNoMin() { // returns Guess, but does not look at the number of avaiable guesses in each square
+    //	size_t len;
+    //	ROWCOL rc[81];
+    //	uint32_t numFound = 0;
+    //	// make a list of all squares with the mininum values
+    //	for (uint32_t r = 0; r < numRows; r++) {
+    //		for (uint32_t c = 0; c < numCols; c++) {
+    //			len = strlen(sudoku[r][c].allowableValues);
+    //			if (len > 0) {
+    //				rc[numFound].row = r;
+    //				rc[numFound].col = c;
+    //				numFound++;
+    //			}
+    //		}
+    //	}
+    //	// pick one
+    //	ROWCOL rcg = rc[rand() % numFound];
+    //	// now pick random number
+    //	char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
+    //	char g = pstr[rand() % strlen(pstr)];
     return newGuess;
 }
 
-Guess Sudoku::getGuessNoMin() { // returns Guess, but does not look at the number of avaiable guesses in each square
-//	size_t len;
-//	ROWCOL rc[81];
-//	uint32_t numFound = 0;
-//	// make a list of all squares with the mininum values
-//	for (uint32_t r = 0; r < numRows; r++) {
-//		for (uint32_t c = 0; c < numCols; c++) {
-//			len = strlen(sudoku[r][c].allowableValues);
-//			if (len > 0) {
-//				rc[numFound].row = r;
-//				rc[numFound].col = c;
-//				numFound++;
-//			}
-//		}
-//	}
-//	// pick one
-//	ROWCOL rcg = rc[rand() % numFound];
-//	// now pick random number
-//	char* pstr = sudoku[rcg.row][rcg.col].allowableValues;
-//	char g = pstr[rand() % strlen(pstr)];
-	return newGuess;
+Guess Sudoku::getGuess() { // returns Guess
+	size_t minCount = 9;
+	// iterate through squares and get lowest count > 1
+	size_t len;
+
+    uint8_t numFound = 0;
+    // search through all squares and find minimum number of availableValues
+    for(uint8_t r = 0 ; r < numRows ; r++) {
+        for (uint8_t c = 0 ; c < numCols ; c++) {
+            len = strlen(sudoku[r][c].allowableValues);
+            if(len != 0) {
+                minCount = min(minCount, len);
+            }
+        }
+    }
+    // make a list of all squares with the mininum values
+    for(uint8_t r = 0 ; r < numRows ; r++) {
+        for (uint8_t c = 0 ; c < numCols ; c++) {
+            len = strlen(sudoku[r][c].allowableValues);
+            if(len == minCount) {
+                rcGuess[numFound].row = r;
+                rcGuess[numFound].col = c;
+                numFound++;
+            }
+        }
+    }
+    // pick one
+    workrc = rcGuess[rand() % numFound];
+    // now pick random number
+    char* pstr = sudoku[workrc.row][workrc.col].allowableValues;
+    char g = pstr[rand() % strlen(pstr)];
+    newGuess = Guess(workrc, g, sudoku);
+    return newGuess;
 }
+
+
 bool Sudoku::popGuess() {
     if(currentGuess == 0)
         return false;

@@ -22,9 +22,14 @@ char TM145[] =   "57.2.3..19.3..4.85.41...3..7.....19.....98...219..7.3..548.6.7
 
 #define SHORTMAIN
 
-#ifdef SHORTMAIN
+#ifdef noSHORTMAIN
 int main() {
-    Sudoku s;
+    Sudoku s(TM145);
+    printf("is puzzle solved %d\n", s.isPuzzleSolved());
+    s.solvePuzzle();
+    s.printPuzzle();
+    s.printAllowableValues();
+    printf("is puzzle solved %d\n", s.isPuzzleSolved());
 }
 
 //int main() {
@@ -107,7 +112,10 @@ int main()
 	cout << "Min time: " << minTime * 1000.0 << " ms, Max time: " << maxTime * 1000.0 << " ms, Average Time: " << (double)sumTime / (double)solved * 1000 << " ms, Total: " << total.elapsedString(SEC) << " sec" << endl;
 }
 #endif // SHORTMAIN
-
+// removed solveones local vars     Min time: 0.024105 ms, Max time: 2.73368 ms, Average Time: 0.0337027 ms, Total: 6.149522 sec
+// removed strchr in setvalue       Min time: 0.025124 ms, Max time: 5.33436 ms, Average Time: 0.0354065 ms, Total: 6.297419 sec
+// removed redundant rc in setvalue Min time: 0.026409 ms, Max time: 6.66274 ms, Average Time: 0.0382568 ms, Total: 6.612621 sec
+// after making RowCol a class      Min time: 0.02965 ms, Max time: 0.843668 ms, Average Time: 0.0406844 ms, Total: 7.088100 sec
 //100k starting point               Min time: 0.023276 ms, Max time: 1.69528 ms, Average Time: 0.03387 ms, Total: 6.018346 sec
 //100k improved STL                 Min time: 0.01634 ms, Max time: 13.2826 ms, Average Time: 0.0234467 ms, Total: 2.572433 sec
 // 	    1   2   3    4   5   6    7   8   9
