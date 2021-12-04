@@ -4,7 +4,7 @@
 #pragma once
 
 #include <typeinfo>
-#include <string>
+//#include <string>
 #include <vector>
 #include <set>
 #include <map>
@@ -13,8 +13,6 @@
 #include <iomanip>
 #include <algorithm>
 #include <cstring>
-#include <cstdlib>
-#include <ctime>
 #include <cstdlib>
 #include <cstring>
 
@@ -34,12 +32,10 @@ public:
 	void createVectors(void);
     
 	// printing functions
-    void printPuzzle(SUDOKUTYPE state);
     void printPuzzle(void);
     void printPuzzle(char* title);
     void printAllowableValues(void);
 	void printAllowableValues(char* title);
-	void printAllowableValues(SUDOKUTYPE state);
     
     // solving funcitons
     bool setValue(uint8_t r, uint8_t c, char value);
@@ -67,35 +63,19 @@ public:
     
 	char* getAllowableValuesText(void);
 	char* getPuzzleText(void);
-	
-//	string printableStringVector(vector<string> vec);
-//	string printableVectorVectorString(vector<vector<string> >);
-//	string printableStringSet(set<string> st);
-	
-
-
 
 	void test();
 
-	void printSudoku();
-	void printSudoku(SUDOKUTYPE); // so you can look into the guess stack
-
     static const uint32_t guessStackDepth = 81;
 	Guess guessStack[guessStackDepth];
-    uint32_t currentGuess = 0;
+    uint8_t currentGuess = 0;
     
 private:
 
-public:
-	SUDOKUTYPE sudoku;
-
 protected:
-
-
 	vector<string> crossProduct(string a, string b);
 	static const uint32_t numRows = 9;
 	static const uint32_t numCols = 9;
-	//RowCol squares[numRows][numCols];
 	static const size_t valueStringLength = 81 * 11 + 1;
 	static const size_t puzzleStringLength = 82;
 
@@ -117,12 +97,13 @@ protected:
 	static const uint32_t dimNumPeers = 20;
 	RowCol peers[numRows][numCols][dimNumPeers];
     
-    //map<string, string> puzzle; // unit, value
 	uint32_t dimNumDigits = 9;
 	Guess newGuess;
     RowCol rcGuess[81];
 	RowCol workrc;
     char puzzleText[81];
+    char allValues[9 * 82];
+
 };
 
 #endif //_SUDOKU_H

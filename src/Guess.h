@@ -13,14 +13,15 @@ class Sudoku;
 class Guess
 {
 public:
-	Guess(RowCol _square, char _guess, SUDOKUTYPE _state);
+	Guess(RowCol _square, char _guess, char* _puzzle, char* _allowableValues);
 
     Guess();
 	Guess(const Guess&);
 	Guess& operator=(const Guess& cpy) ;
 	string toString();
 
-    SUDOKUTYPE state;
+    char puzzle[9][9];
+    char allowableValues[9][9][10];
 
 	RowCol square;
 	char guess;
