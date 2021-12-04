@@ -1,6 +1,10 @@
 // vcSudoku.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include <cstdlib>
+#include <ctime>
+using namespace std;
+
 #include "Puzzles.h"
 #include "Sudoku.h"
 #include "Guess.h"
@@ -19,18 +23,67 @@ char TM392[] =   "1..65.8.2.3..2851458.314.97719.4.2..346275.8.8.5..3476.6.78194
 char TM604[] =   "2......9.3.49.1..2.95.6...3.6.459..8.8...6.1...28..4..7.13...86...172.49.296..7..";
 char TM118[] =   "39...1487.173.4.598649.7...1..8.576...8436..1.4.71.8354.6.73.989..64837.7..5.9.4.";
 char TM145[] =   "57.2.3..19.3..4.85.41...3..7.....19.....98...219..7.3..548.6.7...297..1..9..2..53";
+char dummy[] =   "9..1.4..2.8..6..7..........4.......1.7.....3.3.......7..........3..7..8.1..2.9..4";
+char diagonal[]= "...21......73......58......43.......2.......8.......76......25......73......98...";
+
+void printPuzzleText(Sudoku ss) {
+    for(int r = 0 ; r < 9 ; r++) {
+        for (int c = 0 ; c < 9 ; c++) {
+            cout << ss.puzzle[r][c];
+        }
+    }
+    cout << endl;
+}
 
 #define SHORTMAIN
 
-#ifdef noSHORTMAIN
+#ifdef SHORTMAIN
 int main() {
-    Sudoku s(TM145);
-    printf("is puzzle solved %d\n", s.isPuzzleSolved());
+    srand((unsigned int)time(NULL));
+    Puzzles pp("../sudoku-puzzles/10000S.txt");
+    Sudoku s(diagonal);
     s.solvePuzzle();
-    s.printPuzzle();
-    s.printAllowableValues();
-    printf("is puzzle solved %d\n", s.isPuzzleSolved());
+    printf("Solved = %d\n",s.isPuzzleSolved());
+    int numPuzzles = pp.getNumberOfPuzzles();
+    printf("%d puzzles read\n",numPuzzles);
+    int numSolved = 0;
+    int numFailed = 0;
+    for (int i = 0 ; i < numPuzzles ; i++) {
+        if(i % 10000 == 0) printf("%d\n",i);
+        s.setPuzzle(pp.getPuzzle(i));
+        if (s.isPuzzleSolved() == true)
+            numSolved++;
+        uint8_t r = rand() % 9;
+        uint8_t c = rand() % 9;
+        char value = s.puzzle[r][c];
+        char newValue = rand() % 9 + '1';
+        while(newValue == value) {
+            newValue = rand() % 9 + '1';
+        }
+        s.puzzle[r][c] = newValue;
+        if(s.isPuzzleSolved() == false)
+            numFailed++;
+    }
+    printf("Number solved %d\n",numSolved);
+    printf("Changes not solved %d\n",numFailed);
 }
+//int main() {
+//    Sudoku s(easy505);
+//    
+//    s.printPuzzle();
+//    s.printAllowableValues();
+//    
+//    cout << "Puzzle solved = " << s.isPuzzleSolved() << endl;
+//    s.solvePuzzle();
+//    cout << "Puzzle solved = " << s.isPuzzleSolved() << endl;
+//    s.printPuzzle();
+//    cout << "Puzzle solved = " << s.isPuzzleSolved() << endl;
+//    printPuzzleText(s);
+//    s.puzzle[0][0] = '3';
+//    printPuzzleText(s);
+//    cout << "Puzzle solved = " << s.isPuzzleSolved() << endl;
+//    printf("\n");
+//}
 
 //int main() {
 //	Puzzles p;
@@ -66,7 +119,7 @@ int main() {
 int main()
 {
 	Puzzles p;
-	Puzzles pf("../sudoku-puzzles/100000P.txt");
+	Puzzles pf("../sudoku-puzzles/1MP.txt");
     //Puzzles pf("../../sudokus/SudokuPuzzles/10MPuzzles_Failed.txt");
 	cout << pf.getNumberOfPuzzles() << " puzzles loaded" << endl;
 	if (pf.getNumberOfPuzzles() == 0)
@@ -88,12 +141,7 @@ int main()
 		ptl.stop();
 		if (s.isPuzzleSolved() == true)
 		{
-//			cout << "SOLVED - ";
 			solved += 1;
-			//s.printPuzzle();
-		}
-		else {
-//			cout << "NOTSOLVED NOTSOLVED NOTSOLVED NOTSOLVED NOTSOLVED NOTSOLVED NOTSOLVED  - ";
 		}
 		time = ptl.elapsed();
 

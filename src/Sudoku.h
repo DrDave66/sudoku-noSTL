@@ -70,9 +70,9 @@ public:
 	Guess guessStack[guessStackDepth];
     uint8_t currentGuess = 0;
     
-private:
+//private:
 
-protected:
+//protected:
 	vector<string> crossProduct(string a, string b);
 	static const uint32_t numRows = 9;
 	static const uint32_t numCols = 9;
